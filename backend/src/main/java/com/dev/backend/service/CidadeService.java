@@ -27,7 +27,7 @@ public class CidadeService {
     }
 
     public Cidade alterar(Cidade cidade) {
-        cidade.setDataCriacao(new Date());
+        cidade.setDataAtualizacao(new Date());
         return cidadeRepository.saveAndFlush(cidade);
     }
 
