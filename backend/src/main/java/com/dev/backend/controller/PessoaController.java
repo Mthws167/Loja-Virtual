@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dev.backend.entity.Pessoa;
+import com.dev.backend.exception.BadResourceException;
+import com.dev.backend.exception.ResourceAlreadyExistsException;
 import com.dev.backend.service.PessoaService;
 
 @RestController
@@ -29,7 +31,7 @@ public class PessoaController {
 	}
 	
 	@PostMapping("/")
-	public Pessoa inserir(@RequestBody Pessoa pessoa) {
+	public Pessoa inserir(@RequestBody Pessoa pessoa) throws ResourceAlreadyExistsException, BadResourceException {
 		return pessoaService.inserir(pessoa);
 	}
 	

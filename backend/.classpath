@@ -28,5 +28,14 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/mthws/.m2/repository/org/springframework/security/spring-security-crypto/5.6.3/spring-security-crypto-5.6.3.jar" sourcepath="C:/Users/mthws/.m2/repository/org/springframework/security/spring-security-crypto/5.6.3/spring-security-crypto-5.6.3-sources.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="maven.groupId" value="org.springframework.security"/>
+			<attribute name="maven.artifactId" value="spring-security-crypto"/>
+			<attribute name="maven.version" value="5.6.3"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
