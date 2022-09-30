@@ -1,7 +1,6 @@
 package com.dev.backend.service;
 
 import java.util.Date;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,36 +8,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.dev.backend.dto.PessoaClienteRequestDTO;
 import com.dev.backend.entity.Pessoa;
 import com.dev.backend.exception.BadResourceException;
 import com.dev.backend.exception.ResourceAlreadyExistsException;
-import com.dev.backend.repository.PessoaRepository;
+import com.dev.backend.repository.PermissaoRepository;
+import com.dev.backend.repository.PessoaClienteRepository;
 
 @Service
-public class PessoaService {
+public class PessoaClienteService {
 
 	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN, Pattern.CASE_INSENSITIVE);
 
 	@Autowired
-	private PessoaRepository pessoaRepository;
+	private PessoaClienteRepository pessoaClienteRepository;
+	
+	@Autowired
+	private PermissaoPessoaService permissaoPessoaService;
 
-	public List<Pessoa> buscarTodos() {
-		return pessoaRepository.findAll();
-	}
+//	public List<Pessoa> buscarTodos() {
+//		return pessoaRepository.findAll();
+//	}
 	
 	private boolean existeId(Long id) {
-		return pessoaRepository.existsById(id);
+		return pessoaClienteRepository.existsById(id);
 	}
 
-	public Pessoa inserir(Pessoa pessoa) throws ResourceAlreadyExistsException, BadResourceException {
+	public Pessoa registrar(PessoaClienteRequestDTO pessoaClienteRequestDTO) throws ResourceAlreadyExistsException, BadResourceException {
+		Pessoa pessoa = new PessoaClienteRequestDTO().converter(pessoaClienteRequestDTO);
 		if (!StringUtils.isEmpty(pessoa.getNome()) && validarCPF(pessoa.getCpf())) {
 			Matcher matcher = pattern.matcher(pessoa.getEmail());
 			if (matcher.matches() == false)
 				pessoa.setEmail("");
 			// pessoa.setImagemPerfilBase64(Base64.getEncoder().encode(pessoa.getImagemPerfilBase64()));;
-			//pessoa.setSenha(new BCryptPasswordEncoder().encode(pessoa.getSenha()));
+//			pessoa.setSenha(new BCryptPasswordEncoder().encode(pessoa.getSenha()));
 			if (pessoa.getCpf() != null && !pessoa.getCpf().isEmpty()) {
 				throw new ResourceAlreadyExistsException("Pessoa com o CPF: " + pessoa.getCpf() + "\n já existe");
 			}
@@ -46,7 +51,8 @@ public class PessoaService {
 				throw new ResourceAlreadyExistsException("Pessoa com o id: " + pessoa.getId() + "\n já existe");
 			}
 			pessoa.setDataCriacao(new Date());
-			Pessoa pessoaNovo = pessoaRepository.saveAndFlush(pessoa);
+			Pessoa pessoaNovo = pessoaClienteRepository.saveAndFlush(pessoa);
+			permissaoPessoaService.vincularPessoaPermissaoCliente(pessoaNovo);
 			return pessoaNovo;
 		} else {
 			BadResourceException exc = new BadResourceException("Erro ao salvar Pessoa");
@@ -55,15 +61,15 @@ public class PessoaService {
 		}
 	}
 
-	public Pessoa alterar(Pessoa pessoa) {
-		pessoa.setDataCriacao(new Date());
-		return pessoaRepository.saveAndFlush(pessoa);
-	}
-
-	public void excluir(Long id) {
-		Pessoa pessoa = pessoaRepository.findById(id).get();
-		pessoaRepository.delete(pessoa);
-	}
+//	public Pessoa alterar(Pessoa pessoa) {
+//		pessoa.setDataCriacao(new Date());
+//		return pessoaRepository.saveAndFlush(pessoa);
+//	}
+//
+//	public void excluir(Long id) {
+//		Pessoa pessoa = pessoaRepository.findById(id).get();
+//		pessoaRepository.delete(pessoa);
+//	}
 
 	public static boolean validarCPF(String CPF) {
 
