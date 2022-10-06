@@ -1,6 +1,8 @@
 package com.dev.backend.service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +14,6 @@ import com.dev.backend.dto.PessoaClienteRequestDTO;
 import com.dev.backend.entity.Pessoa;
 import com.dev.backend.exception.BadResourceException;
 import com.dev.backend.exception.ResourceAlreadyExistsException;
-import com.dev.backend.repository.PermissaoRepository;
 import com.dev.backend.repository.PessoaClienteRepository;
 
 @Service
@@ -27,6 +28,9 @@ public class PessoaClienteService {
 	
 	@Autowired
 	private PermissaoPessoaService permissaoPessoaService;
+	
+	@Autowired
+	private EmailService emailService;
 
 //	public List<Pessoa> buscarTodos() {
 //		return pessoaRepository.findAll();
@@ -53,6 +57,11 @@ public class PessoaClienteService {
 			pessoa.setDataCriacao(new Date());
 			Pessoa pessoaNovo = pessoaClienteRepository.saveAndFlush(pessoa);
 			permissaoPessoaService.vincularPessoaPermissaoCliente(pessoaNovo);
+			Map<String, Object> propMap = new HashMap<String, Object>();
+			propMap.put("nome", pessoaNovo.getNome());
+			propMap.put("mensagem", "o registro na loja foi realizado com sucesso");
+			emailService.enviarEmailTemplate(pessoaNovo.getEmail(), "Cadastro na loja", propMap);
+			//"Cadastro na Loja Virtual","Registro na Loja Virtual realizado com sucesso. Em breve você receberá a senha de e acesso por e-mail!"
 			return pessoaNovo;
 		} else {
 			BadResourceException exc = new BadResourceException("Erro ao salvar Pessoa");
