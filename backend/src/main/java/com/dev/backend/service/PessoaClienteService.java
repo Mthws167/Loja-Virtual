@@ -12,7 +12,6 @@ import com.dev.backend.dto.PessoaClienteRequestDTO;
 import com.dev.backend.entity.Pessoa;
 import com.dev.backend.exception.BadResourceException;
 import com.dev.backend.exception.ResourceAlreadyExistsException;
-import com.dev.backend.repository.PermissaoRepository;
 import com.dev.backend.repository.PessoaClienteRepository;
 
 @Service
@@ -27,6 +26,9 @@ public class PessoaClienteService {
 	
 	@Autowired
 	private PermissaoPessoaService permissaoPessoaService;
+	
+	@Autowired
+	private EmailService emailService;
 
 //	public List<Pessoa> buscarTodos() {
 //		return pessoaRepository.findAll();
@@ -53,6 +55,7 @@ public class PessoaClienteService {
 			pessoa.setDataCriacao(new Date());
 			Pessoa pessoaNovo = pessoaClienteRepository.saveAndFlush(pessoa);
 			permissaoPessoaService.vincularPessoaPermissaoCliente(pessoaNovo);
+			emailService.enviarEmailTxt(pessoaNovo.getEmail(),"Cadastro na Loja Virtual","Registro na Loja Virtual realizado com sucesso. Em breve você receberá a senha de e acesso por e-mail!");
 			return pessoaNovo;
 		} else {
 			BadResourceException exc = new BadResourceException("Erro ao salvar Pessoa");
