@@ -1,6 +1,8 @@
 package com.dev.backend.service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,7 +57,11 @@ public class PessoaClienteService {
 			pessoa.setDataCriacao(new Date());
 			Pessoa pessoaNovo = pessoaClienteRepository.saveAndFlush(pessoa);
 			permissaoPessoaService.vincularPessoaPermissaoCliente(pessoaNovo);
-			emailService.enviarEmailTxt(pessoaNovo.getEmail(),"Cadastro na Loja Virtual","Registro na Loja Virtual realizado com sucesso. Em breve você receberá a senha de e acesso por e-mail!");
+			Map<String, Object> propMap = new HashMap<String, Object>();
+			propMap.put("nome", pessoaNovo.getNome());
+			propMap.put("mensagem", "o registro na loja foi realizado com sucesso");
+			emailService.enviarEmailTemplate(pessoaNovo.getEmail(), "Cadastro na loja", propMap);
+			//"Cadastro na Loja Virtual","Registro na Loja Virtual realizado com sucesso. Em breve você receberá a senha de e acesso por e-mail!"
 			return pessoaNovo;
 		} else {
 			BadResourceException exc = new BadResourceException("Erro ao salvar Pessoa");
