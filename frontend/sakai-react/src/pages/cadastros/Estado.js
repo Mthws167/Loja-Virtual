@@ -36,7 +36,7 @@ const Estado = () => {
 
     useEffect(() => {
         if(objetos == null){
-            objetoService.estados().then(res =>{
+            objetoService.listarTodos().then(res =>{
                 console.log(res.data);
                 setObjetos(res.data);
             })

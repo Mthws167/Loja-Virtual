@@ -12,20 +12,22 @@ import { RadioButton } from 'primereact/radiobutton';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import {Dropdown, DropDown} from 'primereact/dropdown';
-import { CidadeService } from '../../service/cadastros/CidadeService';
-import { EstadoService } from '../../service/cadastros/EstadoService';
+import { ProdutoService } from '../../service/cadastros/ProdutoService';
 import Axios from 'axios';
 
-const Cidade = () => {
+const Produto = () => {
 
     let objetoNovo = {
         nome: '',
-        estado: ''
+        cpf: '',
+        email:'',
+        senha: '',
+        endereco:'',
+        cep:'',
+        
     };
 
     const [objetos, setObjetos] = useState(null);
-    const [estados, setEstados] = useState(null);
     const [objeto, setObjeto] = useState(objetoNovo);
     const [objetoDialog, setObjetoDialog] = useState(false);
     const [objetoDeleteDialog, setObjetoDeleteDialog] = useState(false);
@@ -35,14 +37,7 @@ const Cidade = () => {
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
-    const objetoService = new CidadeService();
-    const EstadoService = new EstadoService();
-
-    useEffect(() => {
-        EstadoService.listarTodos().then(res =>{
-            setEstados(res.data);
-        })
-    }, []);
+    const objetoService = new ProdutoService();
 
     useEffect(() => {
         if(objetos == null){
@@ -53,8 +48,8 @@ const Cidade = () => {
         }
     }, [objetos]);
 
-    function listarCidades() {
-        Axios.get("http://localhost:8080/api/cidade/").then(result => {
+    function listarProdutos() {
+        Axios.get("http://localhost:8080/api/produto/").then(result => {
             setObjetos(result.data);
         });
     }
@@ -121,7 +116,7 @@ const Cidade = () => {
         return (
         <React.Fragment>
             <div className='my-2'>
-                <Button label="Novo cidade" icon="pi pi-plus" className='p-button-success'/>
+                <Button label="Novo Produto" icon="pi pi-plus" className='p-button-success'/>
             </div>
         </React.Fragment>
         );
@@ -145,18 +140,18 @@ const Cidade = () => {
         );
     }
 
-    const estadoBodyTemplate = (rowData) => {
+    const siglaBodyTemplate = (rowData) => {
         return (
             <>
-                <span className='p-column-title'>estado</span>
-                {rowData.estado && (rowData.estado.nome+'/'+rowData.estado.sigla)}
+                <span className='p-column-title'>sigla</span>
+                {rowData.sigla}
             </>
         );
     }
 
     const header = (
         <div className='flex flex-column md:flex-row md:justify-content-between md:align-items-center'>
-            <h5 className='m-0'>Cidades Cadastrados</h5>
+            <h5 className='m-0'>Produtos Cadastrados</h5>
             <span className='block mt-2 md:mt-0 p-input-icon-left'>
                 <i className='pi pi-search'/>
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} />
@@ -190,18 +185,19 @@ const Cidade = () => {
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                         <Column field="id" header="id" sortable body={idBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="nome" header="Nome" sortable body={nomeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="estado" header="estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="sigla" header="Sigla" sortable body={siglaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={objetoDialog} style={{width: '450px'}} header='Cadastro Cidade'>
+                    <Dialog visible={objetoDialog} style={{width: '450px'}} header='Cadastro Produto'>
                         <div className="field">
                             <label htmlFor="nome">nome</label>
                             <InputText id="nome" value={objeto.nome} onChange={(e) => onInputChange(e, 'nome')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
                             {submitted && !objeto.nome && <small className="p-invalid">Nome é requerido.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="estado">estado</label>
-                            <Dropdown optionLabel="name" value={objeto.estado} options={estados} onChange={(e) => onInputChange(e, 'estado')} placeholder="Selecione um Estado"/>
+                            <label htmlFor="sigla">sigla</label>
+                            <InputText id="sigla" value={objeto.nome} onChange={(e) => onInputChange(e, 'sigla')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
+                            {submitted && !objeto.nome && <small className="p-invalid">Sigla é requerida.</small>}
                         </div>
                     </Dialog>
 
@@ -221,4 +217,4 @@ const comparisonFn = function (prevProps, nextProps) {
     return prevProps.location.pathname === nextProps.location.pathname;
 };
 
-export default React.memo(Cidade, comparisonFn);
+export default React.memo(Produto, comparisonFn);

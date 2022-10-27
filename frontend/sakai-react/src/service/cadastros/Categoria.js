@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { ServiceBase } from './ServiceBase';
 
-export class EstadoService extends ServiceBase{
+export class CategoriaService extends ServiceBase{
 
     constructor() {
-        super("estado")
+        super("categoria")
     }
 }
