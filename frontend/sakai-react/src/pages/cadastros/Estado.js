@@ -13,41 +13,31 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { EstadoService } from '../../service/cadastros/EstadoService';
-import Axios from 'axios';
 
 const Estado = () => {
-
     let objetoNovo = {
         nome: '',
         sigla: ''
     };
 
     const [objetos, setObjetos] = useState(null);
-    const [objeto, setObjeto] = useState(objetoNovo);
     const [objetoDialog, setObjetoDialog] = useState(false);
     const [objetoDeleteDialog, setObjetoDeleteDialog] = useState(false);
-    const [atualizar, setAtualizar] = useState({});
+    const [objeto, setObjeto] = useState(objetoNovo);
     const [submitted, setSubmitted] = useState(false);
-
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
     const objetoService = new EstadoService();
 
     useEffect(() => {
-        if(objetos == null){
-            objetoService.estados().then(res =>{
-                console.log(res.data);
-                setObjetos(res.data);
-            })
+        if (objetos == null) {
+            objetoService.listarTodos().then(res => {
+                setObjetos(res.data)
+
+            });
         }
     }, [objetos]);
-
-    function listarEstados() {
-        Axios.get("http://localhost:8080/api/estado/").then(result => {
-            setObjetos(result.data);
-        });
-    }
 
     const openNew = () => {
         setObjeto(objetoNovo);
@@ -64,44 +54,55 @@ const Estado = () => {
         setObjetoDeleteDialog(false);
     }
 
+
+
     const saveObjeto = () => {
         setSubmitted(true);
 
-        if(objeto.nome.trim()){
-            let _objeto = {...objeto};
-            if(objeto.id){
+        if (objeto.nome.trim()) {
+            let _objeto = { ...objeto };
+            if (objeto.id) {
                 objetoService.alterar(_objeto).then(data => {
-                    toast.current.show({severity: 'success', summary: 'Sucesso', detail: "Alterado"});
+                    toast.current.show({ severity: 'success', summary: 'Sucesso', detail: 'Alterado com Sucesso', life: 3000 });
                     setObjetos(null);
-                })
-            }else{
+                });
+            }
+            else {
                 objetoService.inserir(_objeto).then(data => {
-                    toast.current.show({severity: 'success', summary: 'Sucesso', detail: "Cadastrado"});
+                    toast.current.show({ severity: 'success', summary: 'Sucesso', detail: 'Inserido com Sucesso', life: 3000 });
                     setObjetos(null);
-                })
+                });
+
             }
             setObjetoDialog(false);
             setObjeto(objetoNovo);
         }
     }
 
-    const editObjeto = (objeto) =>{
-        setObjeto({...objeto});
+    const editObjeto = (objeto) => {
+        setObjeto({ ...objeto });
         setObjetoDialog(true);
     }
 
     const confirmDeleteObjeto = (objeto) => {
+        setObjeto(objeto);
+        setObjetoDeleteDialog(true);
+    }
+
+    const deleteObjeto = () => {
+    
         objetoService.excluir(objeto.id).then(data => {
-            toast.current.show({severity: 'success', summary: 'Sucesso', detail: "Removido"});
+            toast.current.show({ severity: 'success', summary: 'Sucesso', detail: 'Removido', life: 3000 });
 
             setObjetos(null);
             setObjetoDeleteDialog(false);
-        })
+         
+        });
     }
 
     const onInputChange = (e, name) => {
-        const val = (e.target && e.targe.value) || '';
-        let _objeto = {...objeto};
+        const val = (e.target && e.target.value) || '';
+        let _objeto = { ...objeto };
         _objeto[`${name}`] = val;
 
         setObjeto(_objeto);
@@ -109,18 +110,19 @@ const Estado = () => {
 
     const leftToolbarTemplate = () => {
         return (
-        <React.Fragment>
-            <div className='my-2'>
-                <Button label="Novo Estado" icon="pi pi-plus" className='p-button-success'/>
-            </div>
-        </React.Fragment>
-        );
+            <React.Fragment>
+                <div className="my-2">
+                    <Button label="Novo Estado" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
+
+                </div>
+            </React.Fragment>
+        )
     }
 
     const idBodyTemplate = (rowData) => {
         return (
             <>
-                <span className='p-column-title'>ID</span>
+                <span className="p-column-title">ID</span>
                 {rowData.id}
             </>
         );
@@ -129,7 +131,7 @@ const Estado = () => {
     const nomeBodyTemplate = (rowData) => {
         return (
             <>
-                <span className='p-column-title'>nome</span>
+                <span className="p-column-title">Nome</span>
                 {rowData.nome}
             </>
         );
@@ -138,70 +140,88 @@ const Estado = () => {
     const siglaBodyTemplate = (rowData) => {
         return (
             <>
-                <span className='p-column-title'>sigla</span>
+                <span className="p-column-title">Sigla</span>
                 {rowData.sigla}
             </>
         );
     }
 
+    const actionBodyTemplate = (rowData) => {
+        return (
+            <div className="actions">
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editObjeto(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteObjeto(rowData)} />
+            </div>
+        );
+    }
+
+
     const header = (
-        <div className='flex flex-column md:flex-row md:justify-content-between md:align-items-center'>
-            <h5 className='m-0'>Estados Cadastrados</h5>
-            <span className='block mt-2 md:mt-0 p-input-icon-left'>
-                <i className='pi pi-search'/>
-                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} />
+        <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+            <h5 className="m-0">Estados Cadastrados</h5>
+            <span className="block mt-2 md:mt-0 p-input-icon-left">
+                <i className="pi pi-search" />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
             </span>
         </div>
-    )
+    );
 
     const objetoDialogFooter = (
         <>
-            <Button label='Cancelar' icon="pi pi-times" className='p-button-text' onClick={hideDialog}/>
-            <Button label='Salvar' icon='pi pi-checks' className='p-button-text' onClick={saveObjeto}/>
+            <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Salvar" icon="pi pi-check" className="p-button-text" onClick={saveObjeto} />
         </>
     );
 
     const deleteObjetoDialogFooter = (
         <>
-            <Button label='Não' icon="pi pi-times" className='p-button-text' onClick={hideDeleteObjetoDialog}/>
-            <Button label='Salvar' icon='pi pi-checks' className='p-button-text' onClick={confirmDeleteObjeto}/>
+            <Button label="Não" icon="pi pi-times" className="p-button-text" onClick={hideDeleteObjetoDialog} />
+            <Button label="Sim" icon="pi pi-check" className="p-button-text" onClick={deleteObjeto} />
         </>
-    )
+    ); 
+
     return (
         <div className="grid crud-demo">
             <div className="col-12">
                 <div className="card">
                     <Toast ref={toast} />
+                    <Toolbar className="mb-4" left={leftToolbarTemplate}></Toolbar>
 
-                    <DataTable ref={dt} value={objetos} dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
+                    <DataTable ref={dt} value={objetos}
+                        dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                        globalFilter={globalFilter} emptyMessage="No products found." header={header} responsiveLayout="scroll">
-                        <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-                        <Column field="id" header="id" sortable body={idBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        currentPageReportTemplate="Mostrando {first} de {last}. Total de {totalRecords}"
+                        globalFilter={globalFilter} emptyMessage="Sem objetos cadastrados." header={header} responsiveLayout="scroll">                        
+                        <Column field="id" header="ID" sortable body={idBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="nome" header="Nome" sortable body={nomeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="sigla" header="Sigla" sortable body={siglaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="sigla" header="Sigla" body={siglaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={objetoDialog} style={{width: '450px'}} header='Cadastro Estado'>
+                    <Dialog visible={objetoDialog} style={{ width: '450px' }} header="Cadastrar/Editar" modal className="p-fluid" footer={objetoDialogFooter} onHide={hideDialog}>
+
                         <div className="field">
-                            <label htmlFor="nome">nome</label>
+                            <label htmlFor="nome">Nome</label>
                             <InputText id="nome" value={objeto.nome} onChange={(e) => onInputChange(e, 'nome')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
-                            {submitted && !objeto.nome && <small className="p-invalid">Nome é requerido.</small>}
+                            {submitted && !objeto.name && <small className="p-invalid">Nome é Obrigatório.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="sigla">sigla</label>
-                            <InputText id="sigla" value={objeto.nome} onChange={(e) => onInputChange(e, 'sigla')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
-                            {submitted && !objeto.nome && <small className="p-invalid">Sigla é requerida.</small>}
+                            <label htmlFor="sigla">Sigla</label>
+                            <InputText id="sigla" value={objeto.sigla} onChange={(e) => onInputChange(e, 'sigla')} required className={classNames({ 'p-invalid': submitted && !objeto.sigla })} />
+                            {submitted && !objeto.sigla && <small className="p-invalid">Sigla é Obrigatório.</small>}
+                        </div>
+
+
+                    </Dialog>
+
+                    <Dialog visible={objetoDeleteDialog} style={{ width: '450px' }} header="Confirmação" modal footer={deleteObjetoDialogFooter} onHide={hideDeleteObjetoDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                            {objeto && <span>Deseja Excluir?</span>}
                         </div>
                     </Dialog>
 
-                    <Dialog visible={objetoDeleteDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteObjetoDialogFooter} onHide={hideDeleteObjetoDialog}>
-                        <div className="flex align-items-center justify-content-center">
-                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {objeto && <span>tem certeza que quer excluir?</span>}
-                        </div>
-                    </Dialog>
+
                 </div>
             </div>
         </div>

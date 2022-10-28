@@ -7,18 +7,14 @@ import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { Dropdown } from 'primereact/dropdown';
-import { CidadeService } from '../../service/cadastros/CidadeService';
-import { EstadoService } from '../../service/cadastros/EstadoService';
+import { MarcaService } from '../../service/cadastros/MarcaService';
 
-const Cidade = () => {
+const Marca = () => {
     let objetoNovo = {
-        nome: '',
-        estado:''
+        nome: ''
     };
 
     const [objetos, setObjetos] = useState(null);
-    const [estados, setEstados] = useState(null);
     const [objetoDialog, setObjetoDialog] = useState(false);
     const [objetoDeleteDialog, setObjetoDeleteDialog] = useState(false);
     const [objeto, setObjeto] = useState(objetoNovo);
@@ -26,14 +22,7 @@ const Cidade = () => {
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
-    const objetoService = new CidadeService();
-    const estadoService = new EstadoService();
-
-    useEffect(() => {       
-            estadoService.listarTodos().then(res => {
-                setEstados(res.data);
-            });        
-    }, []);
+    const objetoService = new MarcaService();
 
     useEffect(() => {
         if (objetos == null) {
@@ -117,7 +106,7 @@ const Cidade = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="Nova Cidade" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
+                    <Button label="Nova" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
 
                 </div>
             </React.Fragment>
@@ -142,14 +131,6 @@ const Cidade = () => {
         );
     }
 
-    const estadoBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Estado</span>
-                {rowData.estado && (rowData.estado.nome+'/'+rowData.estado.sigla)}
-            </>
-        );
-    }
 
     const actionBodyTemplate = (rowData) => {
         return (
@@ -163,7 +144,7 @@ const Cidade = () => {
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Cidades Cadastradas</h5>
+            <h5 className="m-0">Registros Cadastrados</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
@@ -199,7 +180,6 @@ const Cidade = () => {
                         globalFilter={globalFilter} emptyMessage="Sem objetos cadastrados." header={header} responsiveLayout="scroll">                        
                         <Column field="id" header="ID" sortable body={idBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="nome" header="Nome" sortable body={nomeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="estado" header="Estado" body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
@@ -210,12 +190,8 @@ const Cidade = () => {
                             <InputText id="nome" value={objeto.nome} onChange={(e) => onInputChange(e, 'nome')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
                             {submitted && !objeto.name && <small className="p-invalid">Nome é Obrigatório.</small>}
                         </div>
+           
 
-                        <div className="field">
-                            <label htmlFor="nome">Estado</label>
-                            <Dropdown optionLabel="nome" value={objeto.estado} options={estados} filter onChange={(e) => onInputChange(e, 'estado')} placeholder="Selecione um Estado"/>
-                        </div>
-                      
                     </Dialog>
 
                     <Dialog visible={objetoDeleteDialog} style={{ width: '450px' }} header="Confirmação" modal footer={deleteObjetoDialogFooter} onHide={hideDeleteObjetoDialog}>
@@ -236,4 +212,4 @@ const comparisonFn = function (prevProps, nextProps) {
     return prevProps.location.pathname === nextProps.location.pathname;
 };
 
-export default React.memo(Cidade, comparisonFn);
+export default React.memo(Marca, comparisonFn);

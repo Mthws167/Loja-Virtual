@@ -1,21 +1,9 @@
-import Axios from "axios";
+import axios from 'axios';
+import { ServiceBase } from './ServiceBase';
 
-export class CidadeService {
-    url = process.env.REACT_APP_URI_API;
+export class CidadeService extends ServiceBase{
 
-    cidades(){
-        return Axios.get(this.url+"/cidade/");
-    }
-
-    inserir(objeto){
-        return Axios.get(this.url+"/cidade/", objeto);
-    }
-
-    alterar(objeto){
-        return Axios.get(this.url+"/cidade/", objeto);
-    }
-
-    excluir(id){
-        return Axios.get(this.url+"/cidade/"+id);
+    constructor(){
+        super("cidade")
     }
 }
