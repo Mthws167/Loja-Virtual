@@ -12,13 +12,15 @@ import { RadioButton } from 'primereact/radiobutton';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { PermissaoService } from '../../service/cadastros/PermissaoService';
+import {Dropdown, DropDown} from 'primereact/dropdown';
+import { MarcaService } from '../../service/cadastros/MarcaService';
+
 import Axios from 'axios';
 
-const Permissao = () => {
+const Marca = () => {
 
     let objetoNovo = {
-        nome: ''
+        nome: '',
     };
 
     const [objetos, setObjetos] = useState(null);
@@ -31,19 +33,18 @@ const Permissao = () => {
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
-    const objetoService = new PermissaoService();
+    const objetoService = new MarcaService();
 
     useEffect(() => {
         if(objetos == null){
-            objetoService.listarTodos().then(res =>{
-                console.log(res.data);
+            objetoService.marcas().then(res =>{
                 setObjetos(res.data);
             })
         }
     }, [objetos]);
 
-    function listarPermissaos() {
-        Axios.get("http://localhost:8080/api/permissao/").then(result => {
+    function listarMarcas() {
+        Axios.get("http://localhost:8080/api/marca/").then(result => {
             setObjetos(result.data);
         });
     }
@@ -98,19 +99,28 @@ const Permissao = () => {
         })
     }
 
-    const onInputChange = (e, name) => {
-        const val = (e.target && e.targe.value) || '';
+    const onInputChange = (e, nome) => {
+        const val = (e.target && e.target.value) || '';
         let _objeto = {...objeto};
-        _objeto[`${name}`] = val;
+        _objeto[`${nome}`] = val;
 
         setObjeto(_objeto);
+    }
+
+    const actionBodyTemplate = (rowData) => {
+        return (
+            <div className="actions">
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editObjeto(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteObjeto(rowData)} />
+            </div>
+        );
     }
 
     const leftToolbarTemplate = () => {
         return (
         <React.Fragment>
             <div className='my-2'>
-                <Button label="Novo Permissao" icon="pi pi-plus" className='p-button-success'/>
+                <Button label="Nova Pessoa" icon="pi pi-plus" className='p-button-success' onClick={openNew}/>
             </div>
         </React.Fragment>
         );
@@ -134,18 +144,9 @@ const Permissao = () => {
         );
     }
 
-    const siglaBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className='p-column-title'>sigla</span>
-                {rowData.sigla}
-            </>
-        );
-    }
-
     const header = (
         <div className='flex flex-column md:flex-row md:justify-content-between md:align-items-center'>
-            <h5 className='m-0'>Permissões Cadastrados</h5>
+            <h5 className='m-0'>Marca Cadastradas</h5>
             <span className='block mt-2 md:mt-0 p-input-icon-left'>
                 <i className='pi pi-search'/>
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} />
@@ -171,6 +172,7 @@ const Permissao = () => {
             <div className="col-12">
                 <div className="card">
                     <Toast ref={toast} />
+                    <Toolbar className="mb-4" left={leftToolbarTemplate}></Toolbar>
 
                     <DataTable ref={dt} value={objetos} dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -179,14 +181,15 @@ const Permissao = () => {
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                         <Column field="id" header="id" sortable body={idBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="nome" header="Nome" sortable body={nomeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="sigla" header="Sigla" sortable body={siglaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column body={actionBodyTemplate}></Column>
+
                     </DataTable>
 
-                    <Dialog visible={objetoDialog} style={{width: '450px'}} header='Cadastro Permissao'>
+                    <Dialog visible={objetoDialog} style={{ width: '450px' }} footer={objetoDialogFooter} header="Product Details" modal className="p-fluid" onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="nome">nome</label>
-                            <InputText id="nome" value={objeto.nome} onChange={(e) => onInputChange(e, 'nome')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
-                            {submitted && !objeto.nome && <small className="p-invalid">Nome é requerido.</small>}
+                            <label htmlFor="nome">Nome</label>
+                            <InputText id="name" value={objeto.nome} onChange={(e) => onInputChange(e, 'nome')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
+                            {submitted && !objeto.name && <small className="p-invalid">Name is required.</small>}
                         </div>
                     </Dialog>
 
@@ -206,4 +209,4 @@ const comparisonFn = function (prevProps, nextProps) {
     return prevProps.location.pathname === nextProps.location.pathname;
 };
 
-export default React.memo(Permissao, comparisonFn);
+export default React.memo(Marca, comparisonFn);

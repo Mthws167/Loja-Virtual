@@ -12,19 +12,20 @@ import { RadioButton } from 'primereact/radiobutton';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { ProdutoService } from '../../service/cadastros/ProdutoService';
+import {Dropdown, DropDown} from 'primereact/dropdown';
+import { CidadeService } from '../../service/cadastros/CidadeService';
+import { EstadoService } from '../../service/cadastros/EstadoService';
 import Axios from 'axios';
 
-const Produto = () => {
+const Cidade = () => {
 
     let objetoNovo = {
-        descricaoCurta: '',
-        descricaoDetalhada: '',
-        valorCusto:'',
-        valorVenda: '',
+        nome: '',
+        estado: ''
     };
 
     const [objetos, setObjetos] = useState(null);
+    const [estados, setEstados] = useState(null);
     const [objeto, setObjeto] = useState(objetoNovo);
     const [objetoDialog, setObjetoDialog] = useState(false);
     const [objetoDeleteDialog, setObjetoDeleteDialog] = useState(false);
@@ -34,19 +35,28 @@ const Produto = () => {
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
-    const objetoService = new ProdutoService();
+    const objetoService = new CidadeService();
+    const estadoService = new EstadoService();
+
+    useEffect(() => {
+        estadoService.estados().then(res =>{
+            setEstados(res.data);
+        })
+    }, []);
 
     useEffect(() => {
         if(objetos == null){
-            objetoService.listarTodos().then(res =>{
-                console.log(res.data);
+            objetoService.cidades().then(res =>{
                 setObjetos(res.data);
             })
         }
     }, [objetos]);
 
-    function listarProdutos() {
-        Axios.get("http://localhost:8080/api/produto/").then(result => {
+
+
+
+    function listarCidades() {
+        Axios.get("http://localhost:8080/api/cidade/").then(result => {
             setObjetos(result.data);
         });
     }
@@ -69,7 +79,7 @@ const Produto = () => {
     const saveObjeto = () => {
         setSubmitted(true);
 
-        if(objeto.descricaoCurta.trim()){
+        if(objeto.nome.trim()){
             let _objeto = {...objeto};
             if(objeto.id){
                 objetoService.alterar(_objeto).then(data => {
@@ -101,19 +111,28 @@ const Produto = () => {
         })
     }
 
-    const onInputChange = (e, name) => {
-        const val = (e.target && e.targe.value) || '';
+    const onInputChange = (e, nome) => {
+        const val = (e.target && e.target.value) || '';
         let _objeto = {...objeto};
-        _objeto[`${name}`] = val;
+        _objeto[`${nome}`] = val;
 
         setObjeto(_objeto);
+    }
+
+    const actionBodyTemplate = (rowData) => {
+        return (
+            <div className="actions">
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editObjeto(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteObjeto(rowData)} />
+            </div>
+        );
     }
 
     const leftToolbarTemplate = () => {
         return (
         <React.Fragment>
             <div className='my-2'>
-                <Button label="Novo Produto" icon="pi pi-plus" className='p-button-success'/>
+                <Button label="Novo cidade" icon="pi pi-plus" className='p-button-success' onClick={openNew}/>
             </div>
         </React.Fragment>
         );
@@ -128,27 +147,27 @@ const Produto = () => {
         );
     }
 
-    const descricaoCurtaBodyTemplate = (rowData) => {
+    const nomeBodyTemplate = (rowData) => {
         return (
             <>
-                <span className='p-column-title'>descricaoCurta</span>
-                {rowData.descricaoCurta}
+                <span className='p-column-title'>nome</span>
+                {rowData.nome}
             </>
         );
     }
 
-    const siglaBodyTemplate = (rowData) => {
+    const estadoBodyTemplate = (rowData) => {
         return (
             <>
-                <span className='p-column-title'>sigla</span>
-                {rowData.sigla}
+                <span className='p-column-title'>estado</span>
+                {rowData.estado && (rowData.estado.nome+'/'+rowData.estado.sigla)}
             </>
         );
     }
 
     const header = (
         <div className='flex flex-column md:flex-row md:justify-content-between md:align-items-center'>
-            <h5 className='m-0'>Produtos Cadastrados</h5>
+            <h5 className='m-0'>Cidades Cadastrados</h5>
             <span className='block mt-2 md:mt-0 p-input-icon-left'>
                 <i className='pi pi-search'/>
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} />
@@ -174,6 +193,7 @@ const Produto = () => {
             <div className="col-12">
                 <div className="card">
                     <Toast ref={toast} />
+                    <Toolbar className="mb-4" left={leftToolbarTemplate}></Toolbar>
 
                     <DataTable ref={dt} value={objetos} dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -181,31 +201,20 @@ const Produto = () => {
                         globalFilter={globalFilter} emptyMessage="No products found." header={header} responsiveLayout="scroll">
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                         <Column field="id" header="id" sortable body={idBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="descricaoCurta" header="Nome" sortable body={descricaoCurtaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="sigla" header="Sigla" sortable body={siglaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="nome" header="Nome" sortable body={nomeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="estado" header="estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={objetoDialog} style={{width: '450px'}} header='Cadastro Produto'>
-                    
+                    <Dialog visible={objetoDialog} style={{ width: '450px' }} footer={objetoDialogFooter} header="Product Details" modal className="p-fluid" onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="descricaoCurta">Descrição Curta</label>
-                            <InputText id="descricaoCurta" value={objeto.descricaoCurta} onChange={(e) => onInputChange(e, 'descricaoCurta')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.descricaoCurta })} />
-                            {submitted && !objeto.descricaoCurta && <small className="p-invalid">Descrição Curta é requerido.</small>}
+                            <label htmlFor="nome">Nome</label>
+                            <InputText id="name" value={objeto.nome} onChange={(e) => onInputChange(e, 'nome')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
+                            {submitted && !objeto.name && <small className="p-invalid">Name is required.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="descricaoDetalhada">Descrição Detalhada</label>
-                            <InputText id="descricaoDetalhada" value={objeto.descricaoDetalhada} onChange={(e) => onInputChange(e, 'descricaoDetalhada')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.descricaoDetalhada })} />
-                            {submitted && !objeto.descricaoDetalhada && <small className="p-invalid">Descrição Detalhada é requerida.</small>}
-                        </div>
-                        <div className="field">
-                            <label htmlFor="valorCusto">Valor Custo</label>
-                            <InputNumber mode="currency" currency="BRL" locale="pt-BT" id="valorCusto" value={objeto.valorCusto} onValueChange={(e) => onInputChange(e, 'valorCusto')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.valorCusto })} />
-                            {submitted && !objeto.valorCusto && <small className="p-invalid">Valor Custo é requerido.</small>}
-                        </div>
-                        <div className="field">
-                            <label htmlFor="valorVenda">Valor Venda</label>
-                            <InputNumber mode="currency" currency="BRL" locale="pt-BT" id="valorVenda" value={objeto.valorVenda} onValueChange={(e) => onInputChange(e, 'valorVenda')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.valorVenda })} />
-                            {submitted && !objeto.valorVenda && <small className="p-invalid">Valor Venda é requerida.</small>}
+                            <label htmlFor="estado">estado</label>
+                            <Dropdown optionLabel="nome" value={objeto.estado} options={estados} filter onChange={(e) => onInputChange(e, 'estado')} placeholder="Selecione um Estado"/>
                         </div>
                     </Dialog>
 
@@ -225,4 +234,4 @@ const comparisonFn = function (prevProps, nextProps) {
     return prevProps.location.pathname === nextProps.location.pathname;
 };
 
-export default React.memo(Produto, comparisonFn);
+export default React.memo(Cidade, comparisonFn);

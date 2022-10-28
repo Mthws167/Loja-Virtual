@@ -12,23 +12,25 @@ import { RadioButton } from 'primereact/radiobutton';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import {Dropdown, DropDown} from 'primereact/dropdown';
+import { CidadeService } from '../../service/cadastros/CidadeService';
 import { PessoaService } from '../../service/cadastros/PessoaService';
+
 import Axios from 'axios';
-import {InputMask} from 'primereact/inputmask';
 
 const Pessoa = () => {
 
     let objetoNovo = {
         nome: '',
         cpf: '',
-        email:'',
-        senha: '',
-        endereco:'',
-        cep:'',
-        
+        email: '',
+        endereco: '',
+        cep: '',
+        cidade: '',
     };
 
     const [objetos, setObjetos] = useState(null);
+    const [cidades, setCidades] = useState(null);
     const [objeto, setObjeto] = useState(objetoNovo);
     const [objetoDialog, setObjetoDialog] = useState(false);
     const [objetoDeleteDialog, setObjetoDeleteDialog] = useState(false);
@@ -39,11 +41,17 @@ const Pessoa = () => {
     const toast = useRef(null);
     const dt = useRef(null);
     const objetoService = new PessoaService();
+    const cidadeService = new CidadeService();
+
+    useEffect(() => {
+        cidadeService.cidades().then(res =>{
+            setCidades(res.data);
+        })
+    }, []);
 
     useEffect(() => {
         if(objetos == null){
-            objetoService.listarTodos().then(res =>{
-                console.log(res.data);
+            objetoService.pessoas().then(res =>{
                 setObjetos(res.data);
             })
         }
@@ -105,19 +113,28 @@ const Pessoa = () => {
         })
     }
 
-    const onInputChange = (e, name) => {
-        const val = (e.target && e.targe.value) || '';
+    const onInputChange = (e, nome) => {
+        const val = (e.target && e.target.value) || '';
         let _objeto = {...objeto};
-        _objeto[`${name}`] = val;
+        _objeto[`${nome}`] = val;
 
         setObjeto(_objeto);
+    }
+
+    const actionBodyTemplate = (rowData) => {
+        return (
+            <div className="actions">
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editObjeto(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteObjeto(rowData)} />
+            </div>
+        );
     }
 
     const leftToolbarTemplate = () => {
         return (
         <React.Fragment>
             <div className='my-2'>
-                <Button label="Novo Pessoa" icon="pi pi-plus" className='p-button-success'/>
+                <Button label="Nova Pessoa" icon="pi pi-plus" className='p-button-success' onClick={openNew}/>
             </div>
         </React.Fragment>
         );
@@ -141,11 +158,11 @@ const Pessoa = () => {
         );
     }
 
-    const siglaBodyTemplate = (rowData) => {
+    const cidadeBodyTemplate = (rowData) => {
         return (
             <>
-                <span className='p-column-title'>sigla</span>
-                {rowData.sigla}
+                <span className='p-column-title'>estado</span>
+                {rowData.cidade && (rowData.cidade.nome)}
             </>
         );
     }
@@ -178,6 +195,7 @@ const Pessoa = () => {
             <div className="col-12">
                 <div className="card">
                     <Toast ref={toast} />
+                    <Toolbar className="mb-4" left={leftToolbarTemplate}></Toolbar>
 
                     <DataTable ref={dt} value={objetos} dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -186,39 +204,39 @@ const Pessoa = () => {
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                         <Column field="id" header="id" sortable body={idBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="nome" header="Nome" sortable body={nomeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="sigla" header="Sigla" sortable body={siglaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="cidade" header="cidade" sortable body={cidadeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={objetoDialog} style={{width: '450px'}} header='Cadastro Pessoa'>
+                    <Dialog visible={objetoDialog} style={{ width: '450px' }} footer={objetoDialogFooter} header="Product Details" modal className="p-fluid" onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="nome">nome</label>
-                            <InputText id="nome" value={objeto.nome} onChange={(e) => onInputChange(e, 'nome')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
-                            {submitted && !objeto.nome && <small className="p-invalid">Nome é requerido.</small>}
+                            <label htmlFor="nome">Nome</label>
+                            <InputText id="name" value={objeto.nome} onChange={(e) => onInputChange(e, 'nome')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
+                            {submitted && !objeto.name && <small className="p-invalid">Name is required.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="cpf">cpf</label>
-                            <InputMask mask='000.000.000-00' id="cpf" value={objeto.cpf} onChange={(e) => onInputChange(e, 'cpf')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.cpf })} />
-                            {submitted && !objeto.cpf && <small className="p-invalid">CPF é requerido.</small>}
+                            <label htmlFor="nome">CPF</label>
+                            <InputText id="cpf" value={objeto.cpf} onChange={(e) => onInputChange(e, 'cpf')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.cpf })} />
+                            {submitted && !objeto.cpf && <small className="p-invalid">Name is required.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="email">e-mail</label>
+                            <label htmlFor="nome">email</label>
                             <InputText id="email" value={objeto.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.email })} />
-                            {submitted && !objeto.email && <small className="p-invalid">E-mail é requerido.</small>}
+                            {submitted && !objeto.email && <small className="p-invalid">Name is required.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="endereco">endereço</label>
+                            <label htmlFor="nome">endereço</label>
                             <InputText id="endereco" value={objeto.endereco} onChange={(e) => onInputChange(e, 'endereco')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.endereco })} />
-                            {submitted && !objeto.endereco && <small className="p-invalid">Endereço é requerido.</small>}
+                            {submitted && !objeto.endereco && <small className="p-invalid">Name is required.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="cep">endereço</label>
-                            <InputMask mask='00000-000' id="cep" value={objeto.cep} onChange={(e) => onInputChange(e, 'cep')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.cep })} />
-                            {submitted && !objeto.cep && <small className="p-invalid">CEP é requerido.</small>}
+                            <label htmlFor="nome">cep</label>
+                            <InputText id="cep" value={objeto.cep} onChange={(e) => onInputChange(e, 'cep')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.cep })} />
+                            {submitted && !objeto.cep && <small className="p-invalid">Name is required.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="senha">senha</label>
-                            <InputText id="senha" value={objeto.senha} onChange={(e) => onInputChange(e, 'senha')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.senha })} />
-                            {submitted && !objeto.senha && <small className="p-invalid">Senha é requerida.</small>}
+                            <label htmlFor="estado">cidade</label>
+                            <Dropdown optionLabel="nome" value={objeto.cidade} options={cidades} filter onChange={(e) => onInputChange(e, 'cidade')} placeholder="Selecione uma cidade"/>
                         </div>
                     </Dialog>
 
