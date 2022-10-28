@@ -30,14 +30,26 @@ import BlocksDemo from './components/BlocksDemo';
 import IconsDemo from './components/IconsDemo';
 
 import Crud from './pages/Crud';
+<<<<<<< HEAD:frontend/sakai-react/src/App.js
+=======
 import Estado from './pages/cadastros/Estado';
 import Cidade from './pages/cadastros/Cidade';
 import Pessoa from './pages/cadastros/Pessoa';
+>>>>>>> da8f6a8bba64be4a6007e6d2e8a18d2af30a3b0b:frontend/src/App.js
 import EmptyPage from './pages/EmptyPage';
 import TimelineDemo from './pages/TimelineDemo';
 
 import PrimeReact from 'primereact/api';
 import { Tooltip } from 'primereact/tooltip';
+
+import Estado from './pages/cadastros/Estado';
+import Cidade from './pages/cadastros/Cidade';
+import Pessoa from './pages/cadastros/Pessoa';
+import Permissao from './pages/cadastros/Permissao';
+import Produto from './pages/cadastros/Produto';
+import Categoria from './pages/cadastros/Categoria';
+import Marca from './pages/cadastros/Marca';
+
 
 import 'primereact/resources/primereact.css';
 import 'primeicons/primeicons.css';
@@ -49,6 +61,7 @@ import './assets/layout/layout.scss';
 import './App.scss';
 import Categoria from './pages/cadastros/Categoria';
 import Marca from './pages/cadastros/Marca';
+
 
 const App = () => {
     const [layoutMode, setLayoutMode] = useState('static');
@@ -168,6 +181,33 @@ const App = () => {
             }]
         },
         {
+<<<<<<< HEAD:frontend/sakai-react/src/App.js
+            label: 'Cadastros',
+            items: [{
+                label: 'Estados', icon: 'pi pi-fw pi-home', to: '/estados'
+            },
+            {
+                label: 'Cidades', icon: 'pi pi-fw pi-home', to: '/cidades'
+            },
+            {
+                label: 'Marcas', icon: 'pi pi-fw pi-home', to: '/marcas'
+            },
+            {
+                label: 'Categorias', icon: 'pi pi-fw pi-home', to: '/categorias'
+            },
+            {
+                label: 'Produtos', icon: 'pi pi-fw pi-home', to: '/produtos'
+            },
+            {
+                label: 'Permissões', icon: 'pi pi-fw pi-home', to: '/permissoes'
+            },
+            {
+                label: 'Pessoas', icon: 'pi pi-fw pi-home', to: '/pessoas'
+            }]
+        },
+        {
+=======
+>>>>>>> da8f6a8bba64be4a6007e6d2e8a18d2af30a3b0b:frontend/src/App.js
             label: 'UI Components', icon: 'pi pi-fw pi-sitemap',
             items: [
                 { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/formlayout' },
@@ -205,11 +245,14 @@ const App = () => {
             label: 'Pages', icon: 'pi pi-fw pi-clone',
             items: [
                 { label: 'Crud', icon: 'pi pi-fw pi-user-edit', to: '/crud' },
+<<<<<<< HEAD:frontend/sakai-react/src/App.js
+=======
                 { label: 'Estado', icon: 'pi pi-fw pi-state-edit', to: '/estado' },
                 { label: 'Cidade', icon: 'pi pi-fw pi-state-edit', to: '/cidade' },
                 { label: 'Pessoa', icon: 'pi pi-fw pi-state-edit', to: '/pessoa' },
                 { label: 'Categoria', icon: 'pi pi-fw pi-state-edit', to: '/categoria' },
                 { label: 'Marca', icon: 'pi pi-fw pi-state-edit', to: '/marca' },
+>>>>>>> da8f6a8bba64be4a6007e6d2e8a18d2af30a3b0b:frontend/src/App.js
                 { label: 'Timeline', icon: 'pi pi-fw pi-calendar', to: '/timeline' },
                 { label: 'Empty', icon: 'pi pi-fw pi-circle-off', to: '/empty' }
             ]
@@ -327,13 +370,24 @@ const App = () => {
                     <Route path="/misc" component={MiscDemo} />
                     <Route path="/timeline" component={TimelineDemo} />
                     <Route path="/crud" component={Crud} />
+<<<<<<< HEAD:frontend/sakai-react/src/App.js
+=======
                     <Route path="/estado" component={Estado} />
                     <Route path="/cidade" component={Cidade} />
                     <Route path="/pessoa" component={Pessoa} />
                     <Route path="/categoria" component={Categoria} />
                     <Route path="/marca" component={Marca} />
+>>>>>>> da8f6a8bba64be4a6007e6d2e8a18d2af30a3b0b:frontend/src/App.js
                     <Route path="/empty" component={EmptyPage} />
                     <Route path="/documentation" component={Documentation} />
+                    <Route path="/estados" component={Estado} />
+                    <Route path="/cidades" component={Cidade} />
+                    <Route path="/marcas" component={Marca} />
+                    <Route path="/categorias" component={Categoria} />
+                    <Route path="/produtos" component={Produto} />
+                    <Route path="/permissoes" component={Permissao} />
+                    <Route path="/pessoas" component={Pessoa} />
+
                 </div>
 
                 <AppFooter layoutColorMode={layoutColorMode} />
