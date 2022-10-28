@@ -14,6 +14,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { PessoaService } from '../../service/cadastros/PessoaService';
 import Axios from 'axios';
+import {InputMask} from 'primereact/inputmask';
 
 const Pessoa = () => {
 
@@ -195,9 +196,29 @@ const Pessoa = () => {
                             {submitted && !objeto.nome && <small className="p-invalid">Nome é requerido.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="sigla">sigla</label>
-                            <InputText id="sigla" value={objeto.nome} onChange={(e) => onInputChange(e, 'sigla')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
-                            {submitted && !objeto.nome && <small className="p-invalid">Sigla é requerida.</small>}
+                            <label htmlFor="cpf">cpf</label>
+                            <InputMask mask='000.000.000-00' id="cpf" value={objeto.cpf} onChange={(e) => onInputChange(e, 'cpf')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.cpf })} />
+                            {submitted && !objeto.cpf && <small className="p-invalid">CPF é requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="email">e-mail</label>
+                            <InputText id="email" value={objeto.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.email })} />
+                            {submitted && !objeto.email && <small className="p-invalid">E-mail é requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="endereco">endereço</label>
+                            <InputText id="endereco" value={objeto.endereco} onChange={(e) => onInputChange(e, 'endereco')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.endereco })} />
+                            {submitted && !objeto.endereco && <small className="p-invalid">Endereço é requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="cep">endereço</label>
+                            <InputMask mask='00000-000' id="cep" value={objeto.cep} onChange={(e) => onInputChange(e, 'cep')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.cep })} />
+                            {submitted && !objeto.cep && <small className="p-invalid">CEP é requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="senha">senha</label>
+                            <InputText id="senha" value={objeto.senha} onChange={(e) => onInputChange(e, 'senha')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.senha })} />
+                            {submitted && !objeto.senha && <small className="p-invalid">Senha é requerida.</small>}
                         </div>
                     </Dialog>
 

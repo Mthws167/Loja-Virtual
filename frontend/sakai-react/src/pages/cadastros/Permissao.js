@@ -188,11 +188,6 @@ const Permissao = () => {
                             <InputText id="nome" value={objeto.nome} onChange={(e) => onInputChange(e, 'nome')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
                             {submitted && !objeto.nome && <small className="p-invalid">Nome é requerido.</small>}
                         </div>
-                        <div className="field">
-                            <label htmlFor="sigla">sigla</label>
-                            <InputText id="sigla" value={objeto.nome} onChange={(e) => onInputChange(e, 'sigla')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
-                            {submitted && !objeto.nome && <small className="p-invalid">Sigla é requerida.</small>}
-                        </div>
                     </Dialog>
 
                     <Dialog visible={objetoDeleteDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteObjetoDialogFooter} onHide={hideDeleteObjetoDialog}>

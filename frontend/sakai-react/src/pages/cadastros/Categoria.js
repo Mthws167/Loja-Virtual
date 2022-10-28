@@ -182,16 +182,11 @@ const Categoria = () => {
                         <Column field="sigla" header="Sigla" sortable body={siglaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={objetoDialog} style={{width: '450px'}} header='Cadastro Categoria'>
+                    <Dialog visible={objetoDialog} style={{width: '450px'}} header='Cadastro Categoria' onHide={objetoDialogFooter}>
                         <div className="field">
                             <label htmlFor="nome">nome</label>
                             <InputText id="nome" value={objeto.nome} onChange={(e) => onInputChange(e, 'nome')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
                             {submitted && !objeto.nome && <small className="p-invalid">Nome é requerido.</small>}
-                        </div>
-                        <div className="field">
-                            <label htmlFor="sigla">sigla</label>
-                            <InputText id="sigla" value={objeto.nome} onChange={(e) => onInputChange(e, 'sigla')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
-                            {submitted && !objeto.nome && <small className="p-invalid">Sigla é requerida.</small>}
                         </div>
                     </Dialog>
 

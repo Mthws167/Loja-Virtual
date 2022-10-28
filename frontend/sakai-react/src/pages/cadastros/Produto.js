@@ -18,13 +18,10 @@ import Axios from 'axios';
 const Produto = () => {
 
     let objetoNovo = {
-        nome: '',
-        cpf: '',
-        email:'',
-        senha: '',
-        endereco:'',
-        cep:'',
-        
+        descricaoCurta: '',
+        descricaoDetalhada: '',
+        valorCusto:'',
+        valorVenda: '',
     };
 
     const [objetos, setObjetos] = useState(null);
@@ -72,7 +69,7 @@ const Produto = () => {
     const saveObjeto = () => {
         setSubmitted(true);
 
-        if(objeto.nome.trim()){
+        if(objeto.descricaoCurta.trim()){
             let _objeto = {...objeto};
             if(objeto.id){
                 objetoService.alterar(_objeto).then(data => {
@@ -131,11 +128,11 @@ const Produto = () => {
         );
     }
 
-    const nomeBodyTemplate = (rowData) => {
+    const descricaoCurtaBodyTemplate = (rowData) => {
         return (
             <>
-                <span className='p-column-title'>nome</span>
-                {rowData.nome}
+                <span className='p-column-title'>descricaoCurta</span>
+                {rowData.descricaoCurta}
             </>
         );
     }
@@ -184,20 +181,31 @@ const Produto = () => {
                         globalFilter={globalFilter} emptyMessage="No products found." header={header} responsiveLayout="scroll">
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                         <Column field="id" header="id" sortable body={idBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="nome" header="Nome" sortable body={nomeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="descricaoCurta" header="Nome" sortable body={descricaoCurtaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="sigla" header="Sigla" sortable body={siglaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={objetoDialog} style={{width: '450px'}} header='Cadastro Produto'>
+                    
                         <div className="field">
-                            <label htmlFor="nome">nome</label>
-                            <InputText id="nome" value={objeto.nome} onChange={(e) => onInputChange(e, 'nome')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
-                            {submitted && !objeto.nome && <small className="p-invalid">Nome é requerido.</small>}
+                            <label htmlFor="descricaoCurta">Descrição Curta</label>
+                            <InputText id="descricaoCurta" value={objeto.descricaoCurta} onChange={(e) => onInputChange(e, 'descricaoCurta')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.descricaoCurta })} />
+                            {submitted && !objeto.descricaoCurta && <small className="p-invalid">Descrição Curta é requerido.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="sigla">sigla</label>
-                            <InputText id="sigla" value={objeto.nome} onChange={(e) => onInputChange(e, 'sigla')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.nome })} />
-                            {submitted && !objeto.nome && <small className="p-invalid">Sigla é requerida.</small>}
+                            <label htmlFor="descricaoDetalhada">Descrição Detalhada</label>
+                            <InputText id="descricaoDetalhada" value={objeto.descricaoDetalhada} onChange={(e) => onInputChange(e, 'descricaoDetalhada')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.descricaoDetalhada })} />
+                            {submitted && !objeto.descricaoDetalhada && <small className="p-invalid">Descrição Detalhada é requerida.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="valorCusto">Valor Custo</label>
+                            <InputNumber mode="currency" currency="BRL" locale="pt-BT" id="valorCusto" value={objeto.valorCusto} onValueChange={(e) => onInputChange(e, 'valorCusto')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.valorCusto })} />
+                            {submitted && !objeto.valorCusto && <small className="p-invalid">Valor Custo é requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="valorVenda">Valor Venda</label>
+                            <InputNumber mode="currency" currency="BRL" locale="pt-BT" id="valorVenda" value={objeto.valorVenda} onValueChange={(e) => onInputChange(e, 'valorVenda')} required autoFocus className={classNames({ 'p-invalid': submitted && !objeto.valorVenda })} />
+                            {submitted && !objeto.valorVenda && <small className="p-invalid">Valor Venda é requerida.</small>}
                         </div>
                     </Dialog>
 
