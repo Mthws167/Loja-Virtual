@@ -1,11 +1,11 @@
 {
-    "name": "sakai-react",
+    "name": "loja-virtual-front",
     "version": "7.0.3-SNAPSHOT",
     "homepage": ".",
     "private": false,
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/primefaces/sakai-react.git"
+    "repository":{
+        "type":"git",
+        "url":"https://github.com/Mthws167/Loja-Virtual"
     },
     "license": "MIT",
     "dependencies": {

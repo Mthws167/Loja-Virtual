@@ -11,13 +11,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import lombok.Data;
 
 @Entity
-@Table(name = "cidade")
+@Table(name = "produto_imagens")
 @Data
-public class Cidade {
+public class ProdutoImagens {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,10 +26,12 @@ public class Cidade {
 
     private String nome;
     @ManyToOne
-    @JoinColumn(name="idEstado")
-    private Estado estado;
+    @JoinColumn(name="idProduto")
+    private Produto produto;
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataCriacao;
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataAtualizacao;
+    @Transient
+    private byte[] arquivo;    
 }

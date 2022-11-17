@@ -12,27 +12,26 @@ import com.dev.backend.repository.CategoriaRepository;
 @Service
 public class CategoriaService {
 
-	@Autowired
-	private CategoriaRepository categoriaRepository;
-	
-	public List<Categoria> buscarTodos(){
-		return categoriaRepository.findAll();
-	}
-	
-	public Categoria inserir(Categoria objeto) {
-		objeto.setDataCriacao(new Date());
-		Categoria objetoNovo =  categoriaRepository.saveAndFlush(objeto);
-		return objetoNovo;
-	}
-	
-	public Categoria alterar(Categoria objeto){
-		objeto.setDataAtualizacao(new Date());
-		return categoriaRepository.saveAndFlush(objeto);
-	}
-	
-	public void excluir(Long id) {
-		Categoria objeto = categoriaRepository.findById(id).get();
-		categoriaRepository.delete(objeto);
-	}
-	
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
+    public List<Categoria> buscarTodos() {
+        return categoriaRepository.findAll();
+    }
+
+    public Categoria inserir(Categoria objeto) {
+        objeto.setDataCriacao(new Date());
+        Categoria objetoNovo = categoriaRepository.saveAndFlush(objeto);
+        return objetoNovo;
+    }
+
+    public Categoria alterar(Categoria objeto) {
+        objeto.setDataAtualizacao(new Date());
+        return categoriaRepository.saveAndFlush(objeto);
+    }
+
+    public void excluir(Long id) {
+        Categoria objeto = categoriaRepository.findById(id).get();
+        categoriaRepository.delete(objeto);
+    }
 }

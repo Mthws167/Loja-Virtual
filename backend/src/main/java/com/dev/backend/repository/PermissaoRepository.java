@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.dev.backend.entity.Permissao;
 
-public interface PermissaoRepository extends JpaRepository<Permissao,Long>{
+public interface PermissaoRepository extends JpaRepository<Permissao, Long>{
+    
     List<Permissao> findByNome(String nome);
 }

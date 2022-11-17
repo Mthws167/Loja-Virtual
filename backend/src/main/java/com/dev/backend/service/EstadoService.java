@@ -17,7 +17,6 @@ public class EstadoService {
 
     public List<Estado> buscarTodos() {
         return estadoRepository.findAll();
-
     }
 
     public Estado inserir(Estado estado) {
@@ -34,6 +33,5 @@ public class EstadoService {
     public void excluir(Long id) {
         Estado estado = estadoRepository.findById(id).get();
         estadoRepository.delete(estado);
-
     }
 }

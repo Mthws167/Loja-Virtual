@@ -1,13 +1,13 @@
 package com.dev.backend;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootApplication
+@SpringBootTest
 class BackendApplicationTests {
 
-	public static void main(String[] args){
-		SpringApplication.run(BackendApplication.class, args);
+	@Test
+	void contextLoads() {
 	}
 
 }

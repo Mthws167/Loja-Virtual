@@ -17,7 +17,6 @@ public class CidadeService {
 
     public List<Cidade> buscarTodos() {
         return cidadeRepository.findAll();
-
     }
 
     public Cidade inserir(Cidade cidade) {
@@ -26,14 +25,13 @@ public class CidadeService {
         return cidadeNovo;
     }
 
-    public Cidade alterar(Cidade cidade) {
-        cidade.setDataAtualizacao(new Date());
-        return cidadeRepository.saveAndFlush(cidade);
+    public Cidade alterar(Cidade objeto) {
+        objeto.setDataAtualizacao(new Date());
+        return cidadeRepository.saveAndFlush(objeto);
     }
 
     public void excluir(Long id) {
-        Cidade cidade = cidadeRepository.findById(id).get();
-        cidadeRepository.delete(cidade);
-
+        Cidade objeto = cidadeRepository.findById(id).get();
+        cidadeRepository.delete(objeto);
     }
 }

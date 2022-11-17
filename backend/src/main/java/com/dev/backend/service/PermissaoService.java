@@ -12,27 +12,26 @@ import com.dev.backend.repository.PermissaoRepository;
 @Service
 public class PermissaoService {
 
-	@Autowired
-	private PermissaoRepository permissaoRepository;
-	
-	public List<Permissao> buscarTodos(){
-		return permissaoRepository.findAll();
-	}
-	
-	public Permissao inserir(Permissao objeto) {
-		objeto.setDataCriacao(new Date());
-		Permissao objetoNovo =  permissaoRepository.saveAndFlush(objeto);
-		return objetoNovo;
-	}
-	
-	public Permissao alterar(Permissao objeto){
-		objeto.setDataAtualizacao(new Date());
-		return permissaoRepository.saveAndFlush(objeto);
-	}
-	
-	public void excluir(Long id) {
-		Permissao objeto = permissaoRepository.findById(id).get();
-		permissaoRepository.delete(objeto);
-	}
-	
+    @Autowired
+    private PermissaoRepository permissaoRepository;
+
+    public List<Permissao> buscarTodos() {
+        return permissaoRepository.findAll();
+    }
+
+    public Permissao inserir(Permissao objeto) {
+        objeto.setDataCriacao(new Date());
+        Permissao objetoNovo = permissaoRepository.saveAndFlush(objeto);
+        return objetoNovo;
+    }
+
+    public Permissao alterar(Permissao objeto) {
+        objeto.setDataAtualizacao(new Date());
+        return permissaoRepository.saveAndFlush(objeto);
+    }
+
+    public void excluir(Long id) {
+        Permissao objeto = permissaoRepository.findById(id).get();
+        permissaoRepository.delete(objeto);
+    }
 }

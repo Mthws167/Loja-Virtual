@@ -1,5 +1,6 @@
 package com.dev.backend.service;
 
+
 import java.util.Map;
 
 import javax.mail.MessagingException;
@@ -18,56 +19,58 @@ import freemarker.template.Configuration;
 @Service
 public class EmailService {
 
-	@Autowired
-	private JavaMailSender javaMailSender;
-	
-	@Autowired
-	private Configuration fmConfiguration;
-	
-	@Value("${spring.mail.username}")
-	private String remetente;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
-	public String enviarEmailTxt(String destinatario, String titulo,String menssagem) {
-		try {
-			SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-			simpleMailMessage.setFrom(remetente);
-			simpleMailMessage.setTo(destinatario);
-			simpleMailMessage.setSubject(titulo);
-			simpleMailMessage.setText(menssagem);
+    @Autowired
+    private Configuration fmConfiguration;
 
-			javaMailSender.send(simpleMailMessage);
-			return "Email enviado";
-		} catch (Exception ex) {
-			return "Erro ao enviar o E-mail";
-		}
-	}
-	
-	
-	public void enviarEmailTemplate(String destinatario, String titulo, Map<String, Object> propriedades) {
-		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+    @Value("${spring.mail.username}")
+    private String remetente;
 
-		try {
-			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+    public String enviarEmailTexto(String destinatario, String titulo, String mensagem) {
+        try {
+            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+            simpleMailMessage.setFrom(remetente);
+            simpleMailMessage.setTo(destinatario);
+            simpleMailMessage.setSubject(titulo);
+            simpleMailMessage.setText(mensagem);
+            javaMailSender.send(simpleMailMessage);
+            return "Email enviado";
+        } catch (Exception ex) {
+            return "Erro ao enviar o email";
+        }
 
-			mimeMessageHelper.setSubject(titulo);
-			mimeMessageHelper.setFrom(remetente);
-			mimeMessageHelper.setTo(destinatario);
+    }
 
-			mimeMessageHelper.setText(getConteudoTemplate(propriedades), true);
+    public void enviarEmailTemplate(String destinatario, String titulo, Map<String, Object> propriedades) {
+        MimeMessage mimeMessage =javaMailSender.createMimeMessage();
+           try {
+    
+               MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
-			javaMailSender.send(mimeMessageHelper.getMimeMessage());
-		}catch(MessagingException e) {
-			e.printStackTrace();
-		}
-	}
+               mimeMessageHelper.setSubject(titulo);
+               mimeMessageHelper.setFrom(remetente);
+               mimeMessageHelper.setTo(destinatario);
+               
+               mimeMessageHelper.setText(getConteudoTemplate(propriedades), true);
+    
+               javaMailSender.send(mimeMessageHelper.getMimeMessage());
+           } catch (MessagingException e) {
+               e.printStackTrace();
+           }
+       }
+    
+       public String getConteudoTemplate(Map < String, Object >model)     { 
+           StringBuffer content = new StringBuffer();
+    
+           try {
+               content.append(FreeMarkerTemplateUtils.processTemplateIntoString(fmConfiguration.getTemplate("email-recuperacao-codigo.flth"), model));
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+           return content.toString();
+       }
+   
 
-	public String getConteudoTemplate(Map<String, Object> model) {
-		StringBuffer content = new StringBuffer();
-		try {
-			content.append(FreeMarkerTemplateUtils.processTemplateIntoString(fmConfiguration.getTemplate("email-recuperacao-codigo.flth"), model));
-		}catch(Exception e) {
-
-		}
-		return content.toString();
-	}
 }

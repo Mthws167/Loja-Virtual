@@ -2,6 +2,7 @@ package com.dev.backend.controller;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,6 +20,7 @@ import com.dev.backend.service.EstadoService;
 
 @RestController
 @RequestMapping("/api/estado")
+@CrossOrigin
 public class EstadoController {
     
     @Autowired
@@ -27,9 +29,9 @@ public class EstadoController {
     @GetMapping("/")
     @CrossOrigin("http://localhost:3000")
     public List<Estado> buscarTodos(){
-        return estadoService.buscarTodos();
+       return estadoService.buscarTodos();
     }
-    
+
     @PostMapping("/")
     @CrossOrigin("http://localhost:3000")
     public Estado inserir(@RequestBody Estado estado){

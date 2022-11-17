@@ -2,8 +2,10 @@ package com.dev.backend.controller;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,30 +19,32 @@ import com.dev.backend.entity.Marca;
 import com.dev.backend.service.MarcaService;
 
 @RestController
-@RequestMapping("api/marca")
+@RequestMapping("/api/marca")
+@CrossOrigin
 public class MarcaController {
-	
-	@Autowired
-	private MarcaService marcaService;
-	
-	@GetMapping("/")
-	public List<Marca> buscarTodos(){
-		return marcaService.buscarTodos();
-	}
-	
-	@PostMapping("/")
-	public Marca inserir(@RequestBody Marca objeto) {
-		return marcaService.inserir(objeto);
-	}
-	
-	@PutMapping("/")
-	public Marca alterar(@RequestBody Marca objeto) {
-		return marcaService.alterar(objeto);
-	}
-	
-	@DeleteMapping("/")
-	public ResponseEntity<Void> excluir(@PathVariable("id") Long id){
-		marcaService.excluir(id);
-		return ResponseEntity.ok().build();	
-		}
+    
+    @Autowired
+    private MarcaService marcaService;
+
+    @GetMapping("/")
+    public List<Marca> buscarTodos(){
+       return marcaService.buscarTodos();
+    }
+
+    @PostMapping("/")
+    public Marca inserir(@RequestBody Marca objeto){
+        return marcaService.inserir(objeto);
+    }
+
+    @PutMapping("/")
+    public Marca alterar(@RequestBody Marca objeto){
+        return marcaService.alterar(objeto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable("id") Long id){
+        marcaService.excluir(id);
+        return ResponseEntity.ok().build();
+    }
+
 }
