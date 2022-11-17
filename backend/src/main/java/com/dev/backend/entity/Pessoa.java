@@ -51,7 +51,7 @@ public class Pessoa {
 	
 	@OneToMany(mappedBy = "pessoa",orphanRemoval=true,cascade= {CascadeType.PERSIST,CascadeType.MERGE})
 	@Setter(value=AccessLevel.NONE)
-	private List<PermissaoPessoa>permissaoPessoa;
+	private List<PermissaoPessoa> permissaoPessoa;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataCriacao;

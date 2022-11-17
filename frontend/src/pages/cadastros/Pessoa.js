@@ -16,8 +16,6 @@ import { InputMask } from 'primereact/inputmask';
 import { MultiSelect } from 'primereact/multiselect';
 
 
-//{nome:'Frank', permissaoPessoas:[{permissao:{id:55}}]}
-
 const Pessoa = () => {
 
     let objetoNovo = {
