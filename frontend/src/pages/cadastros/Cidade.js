@@ -113,15 +113,6 @@ const Cidade = () => {
         setObjeto(_objeto);
     }
 
-    const actionBodyTemplate = (rowData) => {
-        return (
-            <div className="actions">
-                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editObjeto(rowData)} />
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteObjeto(rowData)} />
-            </div>
-        );
-    }
-
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
@@ -160,7 +151,14 @@ const Cidade = () => {
         );
     }
 
-    
+    const actionBodyTemplate = (rowData) => {
+        return (
+            <div className="actions">
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editObjeto(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteObjeto(rowData)} />
+            </div>
+        );
+    }
 
 
     const header = (
