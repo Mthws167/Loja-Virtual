@@ -16,6 +16,8 @@ import { InputMask } from 'primereact/inputmask';
 import { MultiSelect } from 'primereact/multiselect';
 
 
+//{nome:'Frank', permissaoPessoas:[{permissao:{id:55}}]}
+
 const Pessoa = () => {
 
     let objetoNovo = {
@@ -210,7 +212,7 @@ const Pessoa = () => {
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Registros Cadastrados</h5>
+            <h5 className="m-0">Cadastrado Pessoa</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
