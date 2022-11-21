@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { config } from 'react-transition-group';
 import { LoginService } from '../util/LoginService';
 
 export class ServiceBase {
@@ -31,7 +30,7 @@ export class ServiceBase {
             return response;
         }, (erro) => {
             console.log(erro.response.status);
-            if (erro.response.status == 401) {
+            if (erro.response.status === 401) {
                 if (!erro.request.response.includes("pessoa-gerenciamento/login")) {
                     new LoginService().sair();
                     window.location.href = "/";

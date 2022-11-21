@@ -31,7 +31,7 @@ const Categoria = () => {
 
             });
         }
-    }, [objetos]);
+    },[objetos]);
 
     const openNew = () => {
         setObjeto(objetoNovo);
