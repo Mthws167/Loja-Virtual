@@ -32,6 +32,7 @@ public class CidadeController {
     }
 
     @PostMapping("/")
+    @CrossOrigin("http://localhost:3000")
     public Cidade inserir(@RequestBody Cidade objeto){
         return cidadeService.inserir(objeto);
     }
