@@ -29,6 +29,10 @@ public class EstadoService {
         estado.setDataAtualizacao(new Date());
         return estadoRepository.saveAndFlush(estado);
     }
+    
+    public Estado buscarPorId(Long id) {
+        return estadoRepository.findById(id).get();
+    }
 
     public void excluir(Long id) {
         Estado estado = estadoRepository.findById(id).get();
