@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { CSSTransition } from 'react-transition-group';
+import React, {useState} from 'react';
+import {NavLink} from 'react-router-dom';
+import {CSSTransition} from 'react-transition-group';
 import classNames from 'classnames';
 import {Ripple} from "primereact/ripple";
-import { Badge } from 'primereact/badge';
+import {Badge} from 'primereact/badge';
 
 const AppSubmenu = (props) => {
 
@@ -18,7 +18,7 @@ const AppSubmenu = (props) => {
 
         //execute command
         if (item.command) {
-            item.command({ originalEvent: event, item: item });
+            item.command({originalEvent: event, item: item});
         }
 
         if (index === activeIndex)
@@ -35,7 +35,7 @@ const AppSubmenu = (props) => {
     }
 
     const onKeyDown = (event) => {
-        if (event.code === 'Enter' || event.code === 'Space'){
+        if (event.code === 'Enter' || event.code === 'Space') {
             event.preventDefault();
             event.target.click();
         }
@@ -43,7 +43,7 @@ const AppSubmenu = (props) => {
 
     const renderLinkContent = (item) => {
         let submenuIcon = item.items && <i className="pi pi-fw pi-angle-down menuitem-toggle-icon"></i>;
-        let badge = item.badge && <Badge value={item.badge} />
+        let badge = item.badge && <Badge value={item.badge}/>
 
         return (
             <React.Fragment>
@@ -65,8 +65,7 @@ const AppSubmenu = (props) => {
                     {content}
                 </NavLink>
             )
-        }
-        else {
+        } else {
             return (
                 <a tabIndex="0" aria-label={item.label} onKeyDown={onKeyDown} role="menuitem" href={item.url} className="p-ripple" onClick={(e) => onMenuItemClick(e, item, i)} target={item.target}>
                     {content}
@@ -77,24 +76,23 @@ const AppSubmenu = (props) => {
 
     let items = props.items && props.items.map((item, i) => {
         let active = activeIndex === i;
-        let styleClass = classNames(item.badgeStyleClass, {'layout-menuitem-category': props.root, 'active-menuitem': active && !item.to });
+        let styleClass = classNames(item.badgeStyleClass, {'layout-menuitem-category': props.root, 'active-menuitem': active && !item.to});
 
-        if(props.root) {
+        if (props.root) {
             return (
                 <li className={styleClass} key={i} role="none">
                     {props.root === true && <React.Fragment>
                         <div className="layout-menuitem-root-text" aria-label={item.label}>{item.label}</div>
-                        <AppSubmenu items={item.items} onMenuItemClick={props.onMenuItemClick} />
+                        <AppSubmenu items={item.items} onMenuItemClick={props.onMenuItemClick}/>
                     </React.Fragment>}
                 </li>
             );
-        }
-        else {
+        } else {
             return (
                 <li className={styleClass} key={i} role="none">
                     {renderLink(item, i)}
-                    <CSSTransition classNames="layout-submenu-wrapper" timeout={{ enter: 1000, exit: 450 }} in={active} unmountOnExit>
-                        <AppSubmenu items={item.items} onMenuItemClick={props.onMenuItemClick} />
+                    <CSSTransition classNames="layout-submenu-wrapper" timeout={{enter: 1000, exit: 450}} in={active} unmountOnExit>
+                        <AppSubmenu items={item.items} onMenuItemClick={props.onMenuItemClick}/>
                     </CSSTransition>
                 </li>
             );
@@ -108,11 +106,7 @@ export const AppMenu = (props) => {
 
     return (
         <div className="layout-menu-container">
-            <AppSubmenu items={props.model} className="layout-menu"  onMenuItemClick={props.onMenuItemClick} root={true} role="menu" />
-            <a href="https://www.primefaces.org/primeblocks-react" className="block mt-3">
-                <img alt="primeblocks" className="w-full"
-                     src={props.layoutColorMode === 'light' ? 'assets/layout/images/banner-primeblocks.png' : 'assets/layout/images/banner-primeblocks-dark.png'}/>
-            </a>
+            <AppSubmenu items={props.model} className="layout-menu" onMenuItemClick={props.onMenuItemClick} root={true} role="menu"/>
         </div>
     );
 }

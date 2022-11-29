@@ -1,55 +1,50 @@
 package com.dev.backend.controller;
 
-import java.util.List;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.dev.backend.entity.Produto;
-import com.dev.backend.service.ProdutoService;
+import com.dev.backend.exception.InfoException;
+import com.dev.backend.service.produto.ProdutoService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/produto")
-@CrossOrigin
+@RequiredArgsConstructor
 public class ProdutoController {
-    
-    @Autowired
-    private ProdutoService produtoService;
 
-    @GetMapping("/")
-    public List<Produto> buscarTodos(){
-       return produtoService.buscarTodos();
+    private final ProdutoService produtoService;
+
+    @GetMapping
+    @CrossOrigin("http://localhost:3000")
+    public List<Produto> buscarTodos() {
+        return produtoService.buscarTodos();
     }
 
     @GetMapping("/{id}")
-    public Produto buscarPorId(@PathVariable("id") Long id){
-       return produtoService.buscarPorId(id);
+    @CrossOrigin("http://localhost:3000")
+    public Produto buscarPorId(@PathVariable("id") Long id) throws InfoException {
+        return produtoService.buscarPorId(id);
     }
 
-    @PostMapping("/")
-    public Produto inserir(@RequestBody Produto objeto){
-        return produtoService.inserir(objeto);
+    @PostMapping("/cadastrar")
+    @CrossOrigin("http://localhost:3000")
+    public Produto inserir(@RequestBody Produto produto) throws InfoException {
+        return produtoService.inserir(produto);
     }
 
-    @PutMapping("/")
-    public Produto alterar(@RequestBody Produto objeto){
-        return produtoService.alterar(objeto);
+    @PutMapping("/atualizar/{id}")
+    @CrossOrigin("http://localhost:3000")
+    public Produto alterar(@PathVariable("id") Long id, @RequestBody Produto produto) throws InfoException {
+        return produtoService.alterar(id, produto);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable("id") Long id){
+    @DeleteMapping("/deletar/{id}")
+    @CrossOrigin("http://localhost:3000")
+    public ResponseEntity<Void> excluir(@PathVariable("id") Long id) throws InfoException {
         produtoService.excluir(id);
         return ResponseEntity.ok().build();
     }
-
 }

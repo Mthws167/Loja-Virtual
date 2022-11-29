@@ -1,40 +1,39 @@
 package com.dev.backend.entity;
 
-import java.util.Date;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import lombok.Data;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "produto")
+@Builder
 @Data
-public class Produto {
-
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class Produto extends Auditavel {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    private String descricaoCurta;
-    private String descricaoDetalhada;
+    @Column(name = "nome")
+    private String nome;
+
+    @Column(name = "descricao")
+    private String descricao;
+
+    @Column(name = "valor_custo")
     private Double valorCusto;
+
+    @Column(name = "valor_venda")
     private Double valorVenda;
+
     @ManyToOne
-    @JoinColumn(name="idMarca")
+    @JoinColumn(name = "id_marca")
     private Marca marca;
+
     @ManyToOne
-    @JoinColumn(name="idCategoria")
+    @JoinColumn(name = "id_categoria")
     private Categoria categoria;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataCriacao;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataAtualizacao;
 }

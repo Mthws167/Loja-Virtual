@@ -1,50 +1,44 @@
 package com.dev.backend.controller;
 
-import java.util.List;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.dev.backend.entity.Permissao;
-import com.dev.backend.service.PermissaoService;
+import com.dev.backend.exception.InfoException;
+import com.dev.backend.service.permissao.PermissaoService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/permissao")
-@CrossOrigin
+@RequiredArgsConstructor
 public class PermissaoController {
-    
-    @Autowired
-    private PermissaoService permissaoService;
 
-    @GetMapping("/")
-    public List<Permissao> buscarTodos(){
-       return permissaoService.buscarTodos();
+    private final PermissaoService permissaoService;
+
+    @GetMapping
+    @CrossOrigin("http://localhost:3000")
+    public List<Permissao> buscarTodos() {
+        return permissaoService.buscarTodos();
     }
 
-    @PostMapping("/")
-    public Permissao inserir(@RequestBody Permissao objeto){
-        return permissaoService.inserir(objeto);
+    @PostMapping("/cadastrar")
+    @CrossOrigin("http://localhost:3000")
+    public Permissao inserir(@RequestBody Permissao permissao) throws InfoException {
+        return permissaoService.inserir(permissao);
     }
 
-    @PutMapping("/")
-    public Permissao alterar(@RequestBody Permissao objeto){
-        return permissaoService.alterar(objeto);
+    @PutMapping("/atualizar/{id}")
+    @CrossOrigin("http://localhost:3000")
+    public Permissao alterar(@PathVariable("id") Long id, @RequestBody Permissao permissao) throws InfoException {
+        return permissaoService.alterar(id, permissao);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable("id") Long id){
+    @DeleteMapping("/deletar/{id}")
+    @CrossOrigin("http://localhost:3000")
+    public ResponseEntity<Void> excluir(@PathVariable("id") Long id) throws InfoException {
         permissaoService.excluir(id);
         return ResponseEntity.ok().build();
     }
-
 }

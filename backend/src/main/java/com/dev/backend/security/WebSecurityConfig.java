@@ -18,35 +18,34 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     @Autowired
-	private AuthEntryPointJwt unauthorizedHandler;
+    private AuthEntryPointJwt unauthorizedHandler;
 
-@Bean
-public AuthFilterToken authFilterToken(){
-    return new AuthFilterToken();
-}
+    @Bean
+    public AuthFilterToken authFilterToken() {
+        return new AuthFilterToken();
+    }
 
-@Bean
-public PasswordEncoder passwordEncoder(){
-    return new BCryptPasswordEncoder();
-}
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-@Bean
-public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)throws Exception{
-    return authenticationConfiguration.getAuthenticationManager();
-}
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
-@Bean
-public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-    http.cors().and().csrf().disable()
-        .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and().authorizeRequests().antMatchers("/api/pessoa-gerenciamento/**").permitAll()
-        .antMatchers("/api/pessoa/**").hasAnyAuthority("gerente")
-        .anyRequest().authenticated();
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.cors().and().csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().authorizeRequests().antMatchers("/api/gerenciamento/**").permitAll()
+                .antMatchers("/api/pessoa/**").hasAnyAuthority("ADMINISTRADOR")
+                .anyRequest().authenticated();
 
         http.addFilterBefore(authFilterToken(), UsernamePasswordAuthenticationFilter.class);
 
-    return http.build();
-}
-    
+        return http.build();
+    }
 }

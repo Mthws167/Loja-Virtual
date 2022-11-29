@@ -1,47 +1,34 @@
 package com.dev.backend.entity;
 
-import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.Data;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "permissao_pessoa")
+@Builder
 @Data
-public class PermissaoPessoa implements GrantedAuthority{
-
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class PermissaoPessoa extends Auditavel implements GrantedAuthority {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "idPessoa")
+    @JoinColumn(name = "id_pessoa")
     @JsonIgnore
     private Pessoa pessoa;
 
     @ManyToOne
-    @JoinColumn(name = "idPermissao")
+    @JoinColumn(name = "id_permissao")
     private Permissao permissao;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataCriacao;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataAtualizacao;
     @Override
-    public String getAuthority() {        
+    public String getAuthority() {
         return permissao.getNome();
     }
 }

@@ -1,70 +1,68 @@
 package com.dev.backend.entity;
 
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
-
 @Entity
 @Table(name = "pessoa")
+@Builder
 @Data
-public class Pessoa  implements UserDetails{
-
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class Pessoa extends Auditavel implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "nome")
     private String nome;
+
+    @Column(name = "cpf")
     private String cpf;
+
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "codigo_recuperacao_senha")
     private String codigoRecuperacaoSenha;
+
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "data_envio_codigo")
     private Date dataEnvioCodigo;
+
+    @Column(name = "senha")
     private String senha;
+
+    @Column(name = "endereco")
     private String endereco;
+
+    @Column(name = "cep")
     private String cep;
+
     @ManyToOne
-    @JoinColumn(name="idCidade")
+    @JoinColumn(name = "id_cidade")
     private Cidade cidade;
 
     @OneToMany(mappedBy = "pessoa", orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @Setter(value = AccessLevel.NONE)
     private List<PermissaoPessoa> permissaoPessoas;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataCriacao;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataAtualizacao;
-
-    public void setPermissaoPessoas(List<PermissaoPessoa> pp){
-        for(PermissaoPessoa p:pp){
-            p.setPessoa(this);
+    public void setPermissaoPessoas(List<PermissaoPessoa> permissaoPessoaList) {
+        for (PermissaoPessoa permissaoPessoa : permissaoPessoaList) {
+            permissaoPessoa.setPessoa(this);
         }
-        this.permissaoPessoas = pp;
+        this.permissaoPessoas = permissaoPessoaList;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        
         return permissaoPessoas;
     }
 
@@ -79,7 +77,7 @@ public class Pessoa  implements UserDetails{
     }
 
     @Override
-    public boolean isAccountNonExpired() {       
+    public boolean isAccountNonExpired() {
         return true;
     }
 
